@@ -19,3 +19,4 @@ module.exports.signUp = function(request,response){ //exported function profile
         title: "Codeial | Sign Up"
     });
 }
+
