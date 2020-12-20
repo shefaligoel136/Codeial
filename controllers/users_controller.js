@@ -57,5 +57,6 @@ module.exports.create = function(request,response){
 //get signin data and create sessions
 module.exports.createSession = function(request,response){
     
-    // todo later
+    return response.redirect('/');
+
 };
