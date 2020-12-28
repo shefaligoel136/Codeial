@@ -53,7 +53,7 @@ passport.checkAuthentication = function(request,response,next){
 
     // if user is signed in, then pass on the request to next function -> controller's action
 
-    if(request.isAuthenticated()){
+    if (request.isAuthenticated()){
         return next();
     }
 
@@ -69,6 +69,8 @@ passport.setAuthenticatedUser = function(request,response,next){
 
         response.locals.user = request.user;
     }
+    next();
 }
+
 
 module.exports = passport;

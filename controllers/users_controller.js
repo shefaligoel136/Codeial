@@ -10,6 +10,11 @@ module.exports.profile = function(request,response){ //exported function profile
 
 // for user sign in
 module.exports.signIn = function(request,response){ //exported function profile
+
+    if (request.isAuthenticated()){
+        return response.redirect('/users/profile');
+    }
+
     return response.render('user_sign_in',{
         title: "Codeial | Sign In"
     });
@@ -17,6 +22,11 @@ module.exports.signIn = function(request,response){ //exported function profile
 
 // for user sign up
 module.exports.signUp = function(request,response){ //exported function profile
+
+    if (request.isAuthenticated()){
+        return response.redirect('/users/profile');
+    }
+
     return response.render('user_sign_up',{
         title: "Codeial | Sign Up"
     });
