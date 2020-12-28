@@ -70,3 +70,9 @@ module.exports.createSession = function(request,response){
     return response.redirect('/');  
 
 };
+
+module.exports.destroySession = function(request,response){
+    request.logout();
+
+    return response.redirect('/');
+}
