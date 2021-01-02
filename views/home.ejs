@@ -21,12 +21,19 @@
             <% for(post of posts) { %>
         <li>
             <p>
-                
+               
+                <% if(locals.user && locals.user.id == post.user.id){ %>
+                    
+                    <samll>
+                        <a href="/posts/destroy/<%= post.id%>">X</a>
+                    </samll>
+
                 <%= post.content %>
                 <br>
                 <small>
                     <%= post.user.name %>
                 </small>
+                <% } %>
             </p>
 
             <div class="post-comments">

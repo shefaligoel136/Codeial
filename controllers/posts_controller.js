@@ -16,19 +16,19 @@ module.exports.create = function(request,response){
     });
 }
 
-// module.exports.destroy = function(request,response){
-//     Post.findById(request.params.id, function(err,post){
-//         // .id means converting the object id into string
-//         if(post.user == request.user.id){
-//             post.remove();
+module.exports.destroy = function(request,response){
+    Post.findById(request.params.id, function(err,post){
+        // .id means converting the object id into string
+        if(post.user == request.user.id){
+            post.remove();
 
-//             Comment.deleteMany({
-//                 post:request.params.id
-//             },function(err){
-//                 return response.redirect('back');
-//             });
-//         }else{
-//             return response.redirect('back');
-//         }
-//     })
-// }
+            Comment.deleteMany({
+                post:request.params.id
+            },function(err){
+                return response.redirect('back');
+            });
+        }else{
+            return response.redirect('back');
+        }
+    })
+}
