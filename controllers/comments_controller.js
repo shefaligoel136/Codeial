@@ -1,5 +1,6 @@
 const Comment = require('../models/comment');
 const Post = require('../models/post');
+const { post } = require('../routes/posts');
 
 module.exports.create = function(request,response){
     Post.findById(request.body.post , function(err,post){
@@ -18,4 +19,35 @@ module.exports.create = function(request,response){
         }
 
     });
+}
+
+module.exports.destroy = function(request,response){
+    Comment.findById(request.params.id, function(err,comment){
+        
+        let postId = comment.post;
+        
+        Post.findById(postId,function(err,post){
+            if(err){
+                console.log("Error in finding post");
+            }
+            else{
+                var userId = post.user;
+                if(userId == request.user.id || comment.user == request.user.id){
+                    comment.remove();
+
+                    Post.findByIdAndUpdate(postId,{
+                        $pull :  {
+                            comments: request.params.id
+                        }
+                    },function(err,post){
+                        return response.redirect('back');
+                    })
+                } else{
+                    return response.redirect('back');
+                }
+                
+            }
+        })
+
+    })
 }
