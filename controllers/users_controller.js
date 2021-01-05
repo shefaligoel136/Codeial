@@ -3,9 +3,12 @@
 const User = require('../models/user')
 
 module.exports.profile = function(request,response){ //exported function profile
-    return response.render('user_profile',{
-        title: "Profile"
-    });
+    User.findById(request.params.id,function(err,user){
+        return response.render('user_profile',{
+            title: "User Profile",
+            profile_user: user
+        });
+    })
 }
 
 // for user sign in
