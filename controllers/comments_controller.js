@@ -2,23 +2,29 @@ const Comment = require('../models/comment');
 const Post = require('../models/post');
 const { post } = require('../routes/posts');
 
-module.exports.create = function(request,response){
-    Post.findById(request.body.post , function(err,post){
+module.exports.create = async function(request,response){
 
-        if(post){
-            Comment.create({
-                content : request.body.content,
-                user : request.user._id,
-                post : request.body.post
-            }, function(err,comment){
+    try{
+        let post = await Post.findById(request.body.post)
+
+            if(post){
+               let comment = await Comment.create({
+                    content : request.body.content,
+                    user : request.user._id,
+                    post : request.body.post
+                });
+                    
                 post.comments.push(comment);
                 post.save(); // save tells db that is it the final version so save it
-
+    
                 response.redirect('/');
-            });
+            }
+    
         }
-
-    });
+    catch(err) {
+        console.log("error",err);
+        return;
+    }
 }
 
 module.exports.destroy = function(request,response){
@@ -51,3 +57,4 @@ module.exports.destroy = function(request,response){
 
     })
 }
+
