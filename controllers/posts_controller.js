@@ -10,6 +10,16 @@ module.exports.create = async function(request,response){
             user : request.user._id
     
         });
+
+        if(request.xhr){
+            return response.status(200).json({
+                data: {
+                    post: post
+                },
+                message: "post-created!"
+            })
+        }
+
         request.flash('success',"New post published!")
        return response.redirect('back');
     
