@@ -16,13 +16,13 @@ module.exports.create = async function(request,response){
                     
                 post.comments.push(comment);
                 post.save(); // save tells db that is it the final version so save it
-    
+                request.flash('success',"Comment made!")
                 response.redirect('/');
             }
     
         }
     catch(err) {
-        console.log("error",err);
+        request.flash("error",err);
         return;
     }
 }
@@ -34,7 +34,7 @@ module.exports.destroy = function(request,response){
         
         Post.findById(postId,function(err,post){
             if(err){
-                console.log("Error in finding post");
+                request.flash("error","Error in finding post");
             }
             else{
                 var userId = post.user;
@@ -46,6 +46,7 @@ module.exports.destroy = function(request,response){
                             comments: request.params.id
                         }
                     },function(err,post){
+                        request.flash('success',"Comment deleted!")
                         return response.redirect('back');
                     })
                 } else{

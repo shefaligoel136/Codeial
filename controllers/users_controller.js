@@ -81,6 +81,8 @@ module.exports.create = function(request,response){
 
 //get signin data and create sessions
 module.exports.createSession = function(request,response){
+
+    request.flash('success','Logged in successfully!');
     
     return response.redirect('/');  
 
@@ -88,6 +90,7 @@ module.exports.createSession = function(request,response){
 
 module.exports.destroySession = function(request,response){
     request.logout();
+    request.flash('success','Logged out successfully!');
 
     return response.redirect('/');
 }

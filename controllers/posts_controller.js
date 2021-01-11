@@ -10,31 +10,39 @@ module.exports.create = async function(request,response){
             user : request.user._id
     
         });
-        
+        request.flash('success',"New post published!")
        return response.redirect('back');
     
     }
     
     catch(err){
-        console.log("Error",err);
+        request.flash("error",err);
+        return response.redirect('back');
     }
     
     
 }
 
-module.exports.destroy = function(request,response){
-    Post.findById(request.params.id, function(err,post){
+module.exports.destroy = async function(request,response){
+    try{
+        let post = await Post.findById(request.params.id)
         // .id means converting the object id into string
         if(post.user == request.user.id){
             post.remove();
 
-            Comment.deleteMany({
+          await Comment.deleteMany({
                 post:request.params.id
-            },function(err){
-                return response.redirect('back');
+               
             });
+            request.flash('success',"The post and associated comments deleted!")
+            return response.redirect('back');
         }else{
+            request.flash('error',"You cannot delete this post!");
             return response.redirect('back');
         }
-    })
+    }catch(err){
+        request.flash('error',err);
+        return response.redirect('back');
+    }
+   
 }
