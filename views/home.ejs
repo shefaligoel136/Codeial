@@ -32,9 +32,9 @@
     </h4>
 
     <% for(u of all_users){ %>
-        <a href="/users/profile/<%= u.id%>">
-            <%= u.name%><br>
-        </a>
+        <p>
+            <a href="/users/profile/<%= u.id %>"><%= u.name %></a>
+        </p>
     <% } %>
 </section>
 

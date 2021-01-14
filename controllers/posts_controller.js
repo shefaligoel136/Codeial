@@ -20,7 +20,7 @@ module.exports.create = async function(request,response){
             })
         }
 
-        request.flash('success',"New post published!")
+       request.flash('success',"New post published!")
        return response.redirect('back');
     
     }
@@ -37,6 +37,8 @@ module.exports.destroy = async function(request,response){
     try{
         let post = await Post.findById(request.params.id)
         // .id means converting the object id into string
+
+        
         if(post.user == request.user.id){
             post.remove();
 
@@ -44,12 +46,24 @@ module.exports.destroy = async function(request,response){
                 post:request.params.id
                
             });
+        
+            if(request.xhr){
+                return response.status(200).json({
+                    data: {
+                        post_id: request.params.id
+                    },
+                    message: "post-deleted!"
+                });
+            }
+        
             request.flash('success',"The post and associated comments deleted!")
             return response.redirect('back');
         }else{
             request.flash('error',"You cannot delete this post!");
             return response.redirect('back');
         }
+
+
     }catch(err){
         request.flash('error',err);
         return response.redirect('back');

@@ -4,13 +4,12 @@
         <% if(locals.user && locals.user.id == post.user.id){ %>
             
             <samll>
-                <a class="delete-post-button" href="/posts/destroy/<%= post.id%>">X</a>
+                <a class="delete-post-button" href="/posts/destroy/<%=post.id%>">X</a>
             </samll>
         
         <% } %>
-
         <%= post.content %>
-        <br>
+        <br> 
         <small>
             <%= post.user.name %>
         </small>
@@ -28,8 +27,8 @@
 
         <div class="post-comments-list">
             <ul id="post-comments-<%= post._id %>">
-                
-                <%- include("_comments") -%>
+
+                    <%- include("_comments") -%>
                 
             </ul>
 
