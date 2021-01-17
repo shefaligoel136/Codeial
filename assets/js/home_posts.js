@@ -14,6 +14,16 @@ let createPost = function(){
                 let newPost = newPostDom(data.data.post);
                 $('#post-list-container>ul').prepend(newPost);
                 deletePost($(' .delete-post-button', newPost)); // newPost has delete-post-button inside it
+
+                new Noty({
+                    theme: 'relax',
+                    text: "Post published!",
+                    type: 'success',
+                    layout: 'topRight',
+                    timeout: 1500
+                    
+                }).show();
+
             },
             error: function(error){
                 console.log(error.responseText);
@@ -27,6 +37,7 @@ let createPost = function(){
 // method to create post in DOM 
 
 let newPostDom = function(post){
+    
     return $(`<li id="post-${post._id}">
     <p>     
             
@@ -65,7 +76,7 @@ let newPostDom = function(post){
 
 // method to delete a post from dom
 
-let deletePost = function(deleteLink){
+let deletePost = function(deleteLink){ // deleteLink came from the function deletePost in createPost
     $(deleteLink).click(function(e){
         e.preventDefault();
 
@@ -73,8 +84,19 @@ let deletePost = function(deleteLink){
             type: 'get',
             url: $(deleteLink).prop('href'),
             success: function(data){
-                console.log(`#post-${data.data.post_id}`)
+                //console.log(data);
+                
                 $(`#post-${data.data.post_id}`).remove();
+                //$(`#post-comments-${data.data.post_id}`).remove();
+                new Noty({
+                    theme: 'relax',
+                    text: "Post deleted!",
+                    type: 'success',
+                    layout: 'topRight',
+                    timeout: 1500
+                    
+                }).show();
+
             },
             error: function(error){
                 console.log(error.responseText);

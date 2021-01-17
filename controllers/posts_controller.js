@@ -12,6 +12,9 @@ module.exports.create = async function(request,response){
         });
 
         if(request.xhr){
+
+            post = await post.populate('user', 'name').execPopulate();
+
             return response.status(200).json({
                 data: {
                     post: post
@@ -29,15 +32,13 @@ module.exports.create = async function(request,response){
         request.flash("error",err);
         return response.redirect('back');
     }
-    
-    
+        
 }
 
 module.exports.destroy = async function(request,response){
     try{
         let post = await Post.findById(request.params.id)
         // .id means converting the object id into string
-
         
         if(post.user == request.user.id){
             post.remove();
@@ -63,8 +64,8 @@ module.exports.destroy = async function(request,response){
             return response.redirect('back');
         }
 
-
-    }catch(err){
+    }
+    catch(err){
         request.flash('error',err);
         return response.redirect('back');
     }

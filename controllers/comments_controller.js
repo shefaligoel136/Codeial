@@ -16,9 +16,24 @@ module.exports.create = async function(request,response){
                     
                 post.comments.push(comment);
                 post.save(); // save tells db that is it the final version so save it
+
+                if(request.xhr){
+
+                    comment = await comment.populate('user', 'name').execPopulate();
+
+                    return response.status(200).json({
+                        data: {
+                            comment: comment
+                        },
+                        message: "you made a comment!"
+                    })
+                }
+
                 request.flash('success',"Comment made!")
                 response.redirect('/');
             }
+
+            
     
         }
     catch(err) {
@@ -39,13 +54,26 @@ module.exports.destroy = function(request,response){
             else{
                 var userId = post.user;
                 if(userId == request.user.id || comment.user == request.user.id){
+
                     comment.remove();
 
                     Post.findByIdAndUpdate(postId,{
                         $pull :  {
                             comments: request.params.id
                         }
+                        
                     },function(err,post){
+
+                        if(request.xhr){
+                            console.log("xhr");
+                            return response.status(200).json({
+                                data: {
+                                    comment_id: request.params.id
+                                },
+                                message: "comment-deleted!"
+                            });
+                        } 
+                        
                         request.flash('success',"Comment deleted!")
                         return response.redirect('back');
                     })
