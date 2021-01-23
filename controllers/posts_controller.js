@@ -44,8 +44,7 @@ module.exports.destroy = async function(request,response){
             post.remove();
 
           await Comment.deleteMany({
-                post:request.params.id
-               
+                post:request.params.id     
             });
         
             if(request.xhr){

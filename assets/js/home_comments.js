@@ -19,8 +19,7 @@ let createComments = function(){
                     text: "Post published!",
                     type: 'success',
                     layout: 'topRight',
-                    timeout: 1500
-                    
+                    timeout: 1500     
                 }).show();
             },
             error:function(error){
