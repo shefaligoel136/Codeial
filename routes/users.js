@@ -22,4 +22,17 @@ router.post('/create-session', passport.authenticate(
 
 router.get('/sign-out',userController.destroySession);
 
+
+router.get('/auth/google', passport.authenticate('google', {
+    scope:['profile','email'] // scope is the info we are looking to fetch 
+}));
+
+// url at which I will be receiving the data
+router.get('/auth/google/callback',passport.authenticate('google', { // middle-ware of authentication
+        failureRedirect : '/users/sign-in'
+    }
+),
+    userController.createSession // which is then redirecting to the home page
+);
+
 module.exports = router;
