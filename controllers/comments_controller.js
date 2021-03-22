@@ -1,7 +1,11 @@
 const Comment = require('../models/comment');
 const Post = require('../models/post');
 const { post } = require('../routes/posts');
-const commentsMailer = require('../mailers/comments_mailer');
+const queue = require('../config/kue');
+// const commentsMailer = require('../mailers/comments_mailer');
+const commentEmailWorker = require('../workers/comment_email_worker');
+
+
 
 module.exports.create = async function(request,response){
 
@@ -19,7 +23,21 @@ module.exports.create = async function(request,response){
                 post.save(); // save tells db that is it the final version so save it
 
                 comment = await comment.populate('user', 'name email').execPopulate();
-                commentsMailer.newComment(comment);
+                // commentsMailer.newComment(comment);
+
+                // let job = queueMicrotask.create('emails',comment).save(function(err){
+                //     if(err){
+                //         console.log('Error in creating queue');
+                //     }
+                //     console.log(job.id);
+                // });
+
+                let job = queue.create('emails',comment).save(function(err){
+                    if(err){
+                        console.log('Error in creating queue',err);
+                    }
+                    console.log('job enqueued',job.id);
+                });
 
                 if(request.xhr){
                     return response.status(200).json({
