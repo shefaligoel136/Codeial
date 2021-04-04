@@ -1,11 +1,13 @@
 const Post = require('../models/post');
 const User  = require('../models/user');
 
+
 module.exports.home = async function(request,response){ //exported function home
     // console.log(request.cookies);
     // response.cookie('user_id',25);
 
     try{
+        // CHANGE :: Populate the like for each post and comment
     let posts = await Post.find({})
     .sort('-createdAt')
     .populate('user')
@@ -13,8 +15,11 @@ module.exports.home = async function(request,response){ //exported function home
         path: 'comments',
         populate: {
             path: 'user'
-        }
-    });
+        },
+        populate: {
+            path: 'likes' 
+        } // this populate id for comments
+    }).populate('likes'); // this populate id for posts
 
     let users = await User.find({});
 

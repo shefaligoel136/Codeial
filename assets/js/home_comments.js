@@ -14,6 +14,10 @@ let createComments = function(){
                  $('#post-comments-' + data.data.comment.post).append(newComment);
                  deleteComment($(' .delete-comment-button', newComment));
 
+
+                 //CHANGE :: enable the functionality of toggle like button on the new comment
+                new ToggleLike($('.toggle-like-button',newComment));
+
                  new Noty({
                     theme: 'relax',
                     text: "Post published!",
@@ -31,6 +35,8 @@ let createComments = function(){
 
 let newCommentDom = function(comment){
     //console.log(comment.content);
+
+    // CHANGE :: show the count of zero likes on this comment 
     return $(`  
     <li id="comment-${ comment._id }">
         <p>
@@ -43,6 +49,11 @@ let newCommentDom = function(comment){
             <br>
             <small>
                 ${ comment.user.name } 
+            </small>
+            <small>
+                <a class="toggle-like-button" data-likes="0" href="/likes/toggle/?id=${comment._id}&type=Comment">
+                    0 Likes
+                </a>
             </small>
         </p>
     </li>

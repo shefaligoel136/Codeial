@@ -38,5 +38,18 @@
     <% } %>
 </section>
 
+<!-- Importing this script for creating the comments -->
 <script src="/js/home_posts.js"></script>
 <script src="/js/home_comments.js"></script>
+
+<!-- CHANGE:: import the script file for toggle likes, also run it over for the already present posts and comments on the page -->
+
+<script src="js/toggle_likes.js"></script>
+<!-- on each toggle like button add the class togglelike -->
+<script>
+    $('.toggle-like-button').each(function(){
+        // console.log("hii");
+        let self = this;
+        let toggleLike = new ToggleLike(self);
+    });
+</script>

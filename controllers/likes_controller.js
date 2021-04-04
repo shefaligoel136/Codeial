@@ -41,7 +41,7 @@ module.exports.toggleLike = async function(request,response){
                 onModel : request.query.type
             });
 
-            likeable.likes.push(like._id); //
+            likeable.likes.push(newLike._id); 
             likeable.save();
         }
 

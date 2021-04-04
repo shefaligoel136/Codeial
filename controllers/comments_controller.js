@@ -1,5 +1,6 @@
 const Comment = require('../models/comment');
 const Post = require('../models/post');
+const Like = require('../models/likes');
 const { post } = require('../routes/posts');
 const queue = require('../config/kue');
 // const commentsMailer = require('../mailers/comments_mailer');
@@ -61,48 +62,91 @@ module.exports.create = async function(request,response){
     }
 }
 
-module.exports.destroy = function(request,response){
-    Comment.findById(request.params.id, function(err,comment){
-        
-        let postId = comment.post;
-        
-        Post.findById(postId,function(err,post){
-            if(err){
-                request.flash("error","Error in finding post");
-            }
-            else{
-                var userId = post.user;
-                if(userId == request.user.id || comment.user == request.user.id){
+module.exports.destroy = async function(request,response){
+    try{
+        let comment = await Comment.findById(request.params.id);
 
-                    comment.remove();
+        if(comment.user == request.user.id){
 
-                    Post.findByIdAndUpdate(postId,{
-                        $pull :  {
-                            comments: request.params.id
-                        }
-                        
-                    },function(err,post){
+            let postId = comment.post;
+            comment.remove();
 
-                        if(request.xhr){
-                            console.log("xhr");
-                            return response.status(200).json({
-                                data: {
-                                    comment_id: request.params.id
-                                },
-                                message: "comment-deleted!"
-                            });
-                        } 
-                        
-                        request.flash('success',"Comment deleted!")
-                        return response.redirect('back');
-                    })
-                } else{
-                    return response.redirect('back');
+            let post = Post.findByIdAndUpdate(postId,{
+                $pull: {
+                    comments: request.params.id
                 }
-                
-            }
-        })
+            });
 
-    })
+            // CHANGE :: destroy the associated likes for this comment
+            await Like.deleteMany({
+                likeable : comment._id,
+                onModel : 'Commet'
+            });
+            
+            if(request.xhr){
+                return response.status(200).json({
+                    data: {
+                        comment_id : request.params.id
+                    },
+                    message : "Comment deleted"
+                });
+            }
+
+            request.flash('Success','Comment deleted!');
+            return response.redirect('back');
+            }else{
+                request.flash('error',"You cannot delete this post!");
+                return response.redirect('back');
+            }
+        }
+    
+    catch(err){
+        request.flash('error',err);
+        return response.redirect('back');
+    }
 }
+
+    // Comment.findById(request.params.id, function(err,comment){
+        
+    //     let postId = comment.post;
+        
+    //     Post.findById(postId,function(err,post){
+    //         if(err){
+    //             request.flash("error","Error in finding post");
+    //         }
+    //         else{
+    //             var userId = post.user;
+    //             if(userId == request.user.id || comment.user == request.user.id){
+
+    //                 comment.remove();
+
+    //                 Post.findByIdAndUpdate(postId,{
+    //                     $pull :  {
+    //                         comments: request.params.id
+    //                     }
+                        
+    //                 },function(err,post){
+
+    //                     if(request.xhr){
+    //                         console.log("xhr");
+    //                         return response.status(200).json({
+    //                             data: {
+    //                                 comment_id: request.params.id
+    //                             },
+    //                             message: "comment-deleted!"
+    //                         });
+    //                     } 
+                        
+    //                     request.flash('success',"Comment deleted!")
+    //                     return response.redirect('back');
+    //                 })
+    //             } else{
+    //                 return response.redirect('back');
+    //             }
+                
+    //         }
+    //     })
+
+    // })
+
 
