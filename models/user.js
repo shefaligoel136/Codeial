@@ -20,7 +20,12 @@ const userSchema = new mongoose.Schema({
     },
     avatar:{
         type: String
-    }
+    },
+    // whenever fiendship is made they are added in here as a list of id's, because of this we don't need to traverse the friendship model again and again  
+    friendships : [{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Friendship'
+    }]
 },{
     timestamps: true
 });
