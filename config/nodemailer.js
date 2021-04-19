@@ -1,18 +1,23 @@
 const nodemailer = require("nodemailer");
 const ejs = require('ejs');
 const path = require('path');
+const env = require('./environment');
 
 // define transporter - tells how the communication is going to take place
-let transporter = nodemailer.createTransport({
-    service : 'gmail',
-    host : 'smtp.gmail.com',
-    port: 587,
-    secure : false,
-    auth : {
-        user : 'shefali136goel@gmail.com',
-        pass : 'shefali136'
-    }
-});
+
+
+// let transporter = nodemailer.createTransport({
+//     service : 'gmail',
+//     host : 'smtp.gmail.com',
+//     port: 587,
+//     secure : false,
+//     auth : {
+//         user : 'shefali136goel@gmail.com',
+//         pass : 'shefali136'
+//     }
+// });
+
+let transporter = nodemailer.createTransport(env.smtp);
 
 // defines for html files to be rendered which are defined under the mailers folder inside views
 let renderTemplate = (data,relativePath) => {

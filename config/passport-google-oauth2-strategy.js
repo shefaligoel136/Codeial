@@ -1,14 +1,21 @@
 const passport = require('passport');
 const googleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const env = require('./environment');
 const crypto = require('crypto');
 const User = require('../models/user');
 
 // tell passport to use a new google strategy for login
+// passport.use(new googleStrategy({
+//         clientID: "409261034159-mj8q59t25nfgnj95h7iipftn20u1tcm8.apps.googleusercontent.com",
+//         clientSecret: "mVQeQhJ9SRj0SqsdoTrg8erk",
+//         callbackURL: "http://localhost:8000/users/auth/google/callback" // this call back will be matched from one with the google
+//     },
+    
 passport.use(new googleStrategy({
-        clientID: "409261034159-mj8q59t25nfgnj95h7iipftn20u1tcm8.apps.googleusercontent.com",
-        clientSecret: "mVQeQhJ9SRj0SqsdoTrg8erk",
-        callbackURL: "http://localhost:8000/users/auth/google/callback" // this call back will be matched from one with the google
-    },
+    clientID: env.google_client_id,
+    clientSecret: env.google_client_secret,
+    callbackURL: env.google_callback_url // this call back will be matched from one with the google
+},
 
     function(accessToken, refreshToken, profile, done){ // profile will contain users information, we are going to match user with the email in DB
         
